@@ -1,2 +1,3 @@
 *.py~
+*.py.un~
 dungeon-maker/__pycache__/
