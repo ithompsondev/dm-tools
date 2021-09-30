@@ -1,4 +1,6 @@
 import pygame
+import offset
+import color
 
 class Cell:
     """
@@ -6,19 +8,19 @@ class Cell:
         walk for more than 1 step on the same cell
     """
 
-    def __init__(self,x,y,w,h,color=(159,43,104)):
+    def __init__(self,x,y,w,h,col=color.colors['MPINK']):
         self.cell = pygame.Rect(x,y,w,h)
-        self.r,self.g,self.b = color
+        self.r,self.g,self.b = col
 
 
     # delta passed in by calling function. Darken a cell based on some change in the underlying grid (delta)
     def darken(self,delta):
-        if self.r >= 20:
-            self.r -= 20*delta
-        if self.g >= 20:
-            self.g -= 20*delta
-        if self.b >= 20:
-            self.b -= 20*delta
+        if self.r >= offset.DARKEN:
+            self.r -= offset.DARKEN*delta
+        if self.g >= offset.DARKEN:
+            self.g -= offset.DARKEN*delta
+        if self.b >= offset.DARKEN:
+            self.b -= offset.DARKEN*delta
 
         while not self.in_bounds(self.r,self.g,self.b):
             self.color_spill()
@@ -66,7 +68,7 @@ class Cell:
 
 
 class Grid:
-    def __init__(self,rows,cols,vis_offset=20,thick_offset=2):
+    def __init__(self,rows,cols,vis_offset=offset.WIDTH,thick_offset=offset.THICKNESS):
         self.rows = rows
         self.cols = cols
         self.vis_w = -1
@@ -94,6 +96,10 @@ class Grid:
 
 
     def set_visible_bounds(self,vis_w,vis_h):
+        """
+            Called before rendering the cells of a grid. The region where cells are drawn in
+            is governed by these visible bounds (the width and height of the visible region)
+        """
         self.vis_w = vis_w
         self.vis_h = vis_h
 
@@ -120,7 +126,7 @@ class Grid:
                     wh_offset = -1*self.thick_offset
                     cell = Cell(x + xy_offset,y + xy_offset,cell_w + wh_offset,cell_h + wh_offset)
                     if curr_cell > 1:
-                        cell.darken(curr_cell)
-                    cell.draw(screen) # draw_cell(screen,cell)
+                        cell.darken(curr_cell) # darken this cell if its value is greater than 1, possible elevation
+                    cell.draw(screen)
 
 
