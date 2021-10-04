@@ -1,4 +1,6 @@
 import pygame
+import biomes
+import random
 
 class DrawableCell:
 
@@ -49,7 +51,7 @@ class DrawableCell:
 
 class DrawableGrid2:
 
-    def __init__(self,rows,cols,x,y,width,height):
+    def __init__(self,rows,cols,x,y,width,height,biome):
         self.dgrid = self.new_grid(rows,cols)
         self.rows = rows
         self.cols = cols
@@ -62,6 +64,7 @@ class DrawableGrid2:
         self.cell_height = int(height/rows)
         self.max_step_count = -1 # keep track of the max step count
         self.color = (0,0,0)
+        self.biome = biome
 
 
     def new_grid(self,rows,cols):
@@ -94,7 +97,6 @@ class DrawableGrid2:
                 cell.mul_color(shader)
 
 
-    
     def draw(self,surface):
         # Drawable region
         pygame.draw.rect(surface,self.color,pygame.Rect(self.x,self.y,self.width,self.height))

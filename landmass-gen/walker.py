@@ -16,6 +16,31 @@ class Walker:
         self.dgrid2.set_cell(ci,cj,1)
         return (ci,cj)
 
+    
+    def color_landscape(self):
+        # color the landscape after a walk has taken place so as to do the calculations once and not every frame in an animation
+        for i in range(self.dgrid2.rows):
+            for j in range(self.dgrid2.cols):
+                self.color_cell(self.dgrid2.get_cell(i,j))
+
+
+
+    def color_cell(self,cell):
+        # Set brackets to use in if statement, similar to walk() method
+        land_bracket = self.dgrid2.biome.get_landscape_distrib()
+        veg_bracket = self.dgrid2.biome.get_vegetation_distrib() + land_bracket
+        mount_bracket = self.dgrid2.biome.get_mountain_distrib() + veg_bracket
+        water_bracket = self.dgrid2.biome.get_water_distrib() + mount_bracket
+        r = random.random()
+        if r < land_bracket:
+            cell.set_color(self.dgrid2.biome.get_landscape_color())
+        elif r < veg_bracket:
+            cell.set_color(self.dgrid2.biome.get_vegetation_color())
+        elif r < mount_bracket:
+            cell.set_color(self.dgrid2.biome.get_mountain_color())
+        else:
+            cell.set_color(self.dgrid2.biome.get_water_color())
+
 
     def is_valid_step(self,x,y):
         # x represents column number
