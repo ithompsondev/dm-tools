@@ -60,9 +60,9 @@ class DrawableGrid2:
         self.width = width
         self.height = height
         # Cells are contained within a grid, so a grid holds cell width and height info
-        self.cell_width = int(width/cols)
-        self.cell_height = int(height/rows)
-        self.max_step_count = -1 # keep track of the max step count
+        self.cell_width = width/cols # apparently pygame can work with floats now =D
+        self.cell_height = height/rows
+        self.max_step_count = -1 # keep track of the max step count, used to compute shaders
         self.color = (0,0,0)
         self.biome = biome
 
@@ -93,7 +93,7 @@ class DrawableGrid2:
             for j in range(self.cols):
                 cell = self.get_cell(i,j)
                 steps = cell.get_value()
-                shader = (self.max_step_count - (steps - 1))/self.max_step_count
+                shader = (self.max_step_count - (steps - 1))/self.max_step_count # numerator -> conjugate step count
                 cell.mul_color(shader)
 
 
@@ -107,6 +107,9 @@ class DrawableGrid2:
                 if steps >= 1:
                     # if steps = 1 then shader = (max - 0)/max which is the default color, increased steps lead to darker colors
                     cell_x = self.x + j*self.cell_width # start at self.x if the grid is position at an offset from x = 0 (surface top left corner)
-                    cell_y = self.y + i*self.cell_height # start at self.y if the grid is positioned at an offset from y = 0 (surface top left corner)
+                    cell_y = self.y + i*self.cell_height # start at self.y if the grid is positioned at an   offset from y = 0 (surface top left corner)
                     dcell.draw(surface,cell_x,cell_y,self.cell_width,self.cell_height)
- 
+
+
+    def __str__(self):
+        return f'rows: {self.rows}\ncolumns: {self.cols}\n(x,y): ({self.x},{self.y})\nwidth: {self.width}\nheight: {self.height}\ncell width: {self.cell_width}\ncell height: {self.cell_height}'
